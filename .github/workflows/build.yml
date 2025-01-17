@@ -1,10 +1,10 @@
-name: Build Debian Package
+name: Func A Testing
 
 on:
   push:
-    branche: [branchAutoPackage]
+    branche: [branchAutoTest]
   pull_request:
-    branches: [branchautoPackage]
+    branches: [branchautoTest]
 
 jobs:
   build:
@@ -12,9 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: deb package
+    - name: build and run test
       run: |
+        sudo apt install libgtest-dev
         autoreconf -i
         ./configure
-        make deb
-        dpkg-deb --build deb
+        make check
+        ./test_FuncA

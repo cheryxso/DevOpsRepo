@@ -1,6 +1,10 @@
 bin_PROGRAMS = funca
 funca_SOURCES = main.cpp FuncA.cpp FuncA.h 
 
+check_PROGRAMS = test_FuncA
+test_FuncA_SOURCES = test_FuncA.cpp FuncA.cpp
+test_FuncA_LDADD = -lgtest -lgtest_main -lpthread
+
 .PHONY: deb
 
 deb:
