@@ -1,10 +1,10 @@
-name: Build Tarball
+name: Build Debian Package
 
 on:
   push:
-    branche: [branchAutomake]
+    branche: [branchAutoPackage]
   pull_request:
-    branches: [branchautomake]
+    branches: [branchautoPackage]
 
 jobs:
   build:
@@ -12,10 +12,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Tarball file
+    - name: deb package
       run: |
         autoreconf -i
         ./configure
-        make dist
-        
-        
+        make deb
+        dpkg-deb --build deb

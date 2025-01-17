@@ -757,6 +757,17 @@ uninstall-am: uninstall-binPROGRAMS
 .PRECIOUS: Makefile
 
 
+.PHONY: deb
+
+deb:
+	@mkdir -p deb/DEBIAN
+	echo "Source: funca" > deb/DEBIAN/control
+	echo "Maintainer: cheryxso stor8ge18@gmail.com" >> deb/DEBIAN/control
+	echo "Package: funca" >> deb/DEBIAN/control
+	echo "Architecture: any" >> deb/DEBIAN/control
+	echo "Version: 1.0" >> deb/DEBIAN/control
+	echo "Description: FuncA " >> deb/DEBIAN/control
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
