@@ -1,9 +1,12 @@
-bin_PROGRAMS = funca
-funca_SOURCES = main.cpp FuncA.cpp FuncA.h 
+bin_PROGRAMS = funca http_server
+funca_SOURCES = main.cpp FuncA.cpp FuncA.h
+http_server_SOURCES = http_server.cpp FuncA.cpp FuncA.h
 
-check_PROGRAMS = test_FuncA
+check_PROGRAMS = test_FuncA http_server_test
 test_FuncA_SOURCES = test_FuncA.cpp FuncA.cpp
 test_FuncA_LDADD = -lgtest -lgtest_main -lpthread
+
+http_server_test_SOURCES = http_server_test.cpp
 
 .PHONY: deb
 

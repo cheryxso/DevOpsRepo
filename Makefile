@@ -86,8 +86,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = funca$(EXEEXT)
-check_PROGRAMS = test_FuncA$(EXEEXT)
+bin_PROGRAMS = funca$(EXEEXT) http_server$(EXEEXT)
+check_PROGRAMS = test_FuncA$(EXEEXT) http_server_test$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -105,6 +105,12 @@ PROGRAMS = $(bin_PROGRAMS)
 am_funca_OBJECTS = main.$(OBJEXT) FuncA.$(OBJEXT)
 funca_OBJECTS = $(am_funca_OBJECTS)
 funca_LDADD = $(LDADD)
+am_http_server_OBJECTS = http_server.$(OBJEXT) FuncA.$(OBJEXT)
+http_server_OBJECTS = $(am_http_server_OBJECTS)
+http_server_LDADD = $(LDADD)
+am_http_server_test_OBJECTS = http_server_test.$(OBJEXT)
+http_server_test_OBJECTS = $(am_http_server_test_OBJECTS)
+http_server_test_LDADD = $(LDADD)
 am_test_FuncA_OBJECTS = test_FuncA.$(OBJEXT) FuncA.$(OBJEXT)
 test_FuncA_OBJECTS = $(am_test_FuncA_OBJECTS)
 test_FuncA_DEPENDENCIES =
@@ -123,7 +129,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/FuncA.Po ./$(DEPDIR)/main.Po \
+am__depfiles_remade = ./$(DEPDIR)/FuncA.Po ./$(DEPDIR)/http_server.Po \
+	./$(DEPDIR)/http_server_test.Po ./$(DEPDIR)/main.Po \
 	./$(DEPDIR)/test_FuncA.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -151,8 +158,10 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(funca_SOURCES) $(test_FuncA_SOURCES)
-DIST_SOURCES = $(funca_SOURCES) $(test_FuncA_SOURCES)
+SOURCES = $(funca_SOURCES) $(http_server_SOURCES) \
+	$(http_server_test_SOURCES) $(test_FuncA_SOURCES)
+DIST_SOURCES = $(funca_SOURCES) $(http_server_SOURCES) \
+	$(http_server_test_SOURCES) $(test_FuncA_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -285,9 +294,11 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-funca_SOURCES = main.cpp FuncA.cpp FuncA.h 
+funca_SOURCES = main.cpp FuncA.cpp FuncA.h
+http_server_SOURCES = http_server.cpp FuncA.cpp FuncA.h
 test_FuncA_SOURCES = test_FuncA.cpp FuncA.cpp
 test_FuncA_LDADD = -lgtest -lgtest_main -lpthread
+http_server_test_SOURCES = http_server_test.cpp
 all: all-am
 
 .SUFFIXES:
@@ -375,6 +386,14 @@ funca$(EXEEXT): $(funca_OBJECTS) $(funca_DEPENDENCIES) $(EXTRA_funca_DEPENDENCIE
 	@rm -f funca$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(funca_OBJECTS) $(funca_LDADD) $(LIBS)
 
+http_server$(EXEEXT): $(http_server_OBJECTS) $(http_server_DEPENDENCIES) $(EXTRA_http_server_DEPENDENCIES) 
+	@rm -f http_server$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(http_server_OBJECTS) $(http_server_LDADD) $(LIBS)
+
+http_server_test$(EXEEXT): $(http_server_test_OBJECTS) $(http_server_test_DEPENDENCIES) $(EXTRA_http_server_test_DEPENDENCIES) 
+	@rm -f http_server_test$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(http_server_test_OBJECTS) $(http_server_test_LDADD) $(LIBS)
+
 test_FuncA$(EXEEXT): $(test_FuncA_OBJECTS) $(test_FuncA_DEPENDENCIES) $(EXTRA_test_FuncA_DEPENDENCIES) 
 	@rm -f test_FuncA$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(test_FuncA_OBJECTS) $(test_FuncA_LDADD) $(LIBS)
@@ -386,6 +405,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/FuncA.Po # am--include-marker
+include ./$(DEPDIR)/http_server.Po # am--include-marker
+include ./$(DEPDIR)/http_server_test.Po # am--include-marker
 include ./$(DEPDIR)/main.Po # am--include-marker
 include ./$(DEPDIR)/test_FuncA.Po # am--include-marker
 
@@ -685,6 +706,8 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/FuncA.Po
+	-rm -f ./$(DEPDIR)/http_server.Po
+	-rm -f ./$(DEPDIR)/http_server_test.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/test_FuncA.Po
 	-rm -f Makefile
@@ -735,6 +758,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/FuncA.Po
+	-rm -f ./$(DEPDIR)/http_server.Po
+	-rm -f ./$(DEPDIR)/http_server_test.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/test_FuncA.Po
 	-rm -f Makefile
