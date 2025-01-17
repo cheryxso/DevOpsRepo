@@ -1,10 +1,10 @@
-name: C/C++ CI
+name: Build Tarball
 
 on:
   push:
-    branches: [branchMake]
+    branche: [branchAutomake]
   pull_request:
-    branches: [branchMake]
+    branches: [branchautomake]
 
 jobs:
   build:
@@ -12,7 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: make
-      run: make
-
-
+    - name: Tarball file
+      run: |
+        autoreconf -i
+        ./configure
+        make dist
+        
+        
