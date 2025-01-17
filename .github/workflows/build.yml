@@ -2,9 +2,9 @@ name: Build And Push Docker Image
 
 on:
   push:
-    branche: [branchHTTPserver]
+    branche: [branchHTTPserverMulti]
   pull_request:
-    branches: [branchHTTPserver]
+    branches: [branchHTTPserverMulti]
 
 jobs:
   build:
@@ -12,10 +12,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: configure project
-      run: |
-        autoreconf -i
-        ./configure
+
+    - name: Set up QEMU for multiarch builds
+      uses: docker/setup-qemu-action@v2
+      with:
+        platforms: linux/amd64,linux/arm64
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        driver: docker-container
+        buildkitd-flags: --allow-insecure-entitlement security.insecure
 
     - name: Log in to Dockerhub
       env:
@@ -23,12 +30,14 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
-    - name: Build docker image and push it
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/http_server .
-        docker push ${{ secrets.DOCKER_USERNAME }}/http_server
+    - name: Build and push multiarch image
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/http_server:multi
+        platforms: linux/amd64,linux/arm64
 
     - name: Run docker container
       run: |
-        docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/http_server
+        docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/http_server:multi
         docker ps
