@@ -1,10 +1,10 @@
-name: Func A Testing
+name: Build And Push Docker Image
 
 on:
   push:
-    branche: [branchAutoTest]
+    branche: [branchHTTPserver]
   pull_request:
-    branches: [branchautoTest]
+    branches: [branchHTTPserver]
 
 jobs:
   build:
@@ -12,10 +12,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: build and run test
+    - name: configure project
       run: |
-        sudo apt install libgtest-dev
         autoreconf -i
         ./configure
-        make check
-        ./test_FuncA
+
+    - name: Log in to Dockerhub
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+
+    - name: Build docker image and push it
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/http_server .
+        docker push ${{ secrets.DOCKER_USERNAME }}/http_server
+
+    - name: Run docker container
+      run: |
+        docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/http_server
+        docker ps
